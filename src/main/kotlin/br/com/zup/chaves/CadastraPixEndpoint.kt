@@ -47,7 +47,7 @@ class CadastraPixEndpoint(
             }
 
             // TODO: 08/04/2021 Descobrir como chamar a conta, instituicao e titular
-//            val novaChave = request.paraChave()
+            val novaChave = request.paraChave()
 
             logger.info("Salvando chave no banco de dados")
 //            chavePixRepository.save(novaChave)
