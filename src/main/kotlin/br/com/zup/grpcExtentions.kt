@@ -1,7 +1,7 @@
 package br.com.zup
 
 import br.com.zup.chaves.ChavePix
-import br.com.zup.chaves.clients.BuscaPorClienteResponse
+import br.com.zup.clients.BuscaPorClienteResponse
 import br.com.zup.contas.Conta
 import br.com.zup.contas.Instituicao
 import br.com.zup.contas.Titular

@@ -1,6 +1,6 @@
 package br.com.zup.exceptions
 
-import br.com.zup.chaves.CadastraPixEndpoint
+import br.com.zup.chaves.cadastra.CadastraPixEndpoint
 import io.grpc.Status
 import io.grpc.stub.StreamObserver
 import io.micronaut.aop.InterceptorBean
@@ -27,6 +27,7 @@ class ExceptionHandlerInterceptor: MethodInterceptor<CadastraPixEndpoint, Any> {
             val statusError = when(e) {
                 is IllegalStateException -> Status.ALREADY_EXISTS.withDescription(e.message).asRuntimeException()
                 is IllegalArgumentException -> Status.INVALID_ARGUMENT.withDescription(e.message).asRuntimeException()
+                is ChaveNaoEncontradaException -> Status.NOT_FOUND.withDescription(e.message).asRuntimeException()
                 else -> Status.UNKNOWN.withDescription("Desculpe, houve um erro inesperado").asRuntimeException()
             }
 

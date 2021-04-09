@@ -1,8 +1,11 @@
-package br.com.zup.chaves
+package br.com.zup.chaves.cadastra
 
 import br.com.zup.*
-import br.com.zup.chaves.clients.BacenClient
-import br.com.zup.chaves.clients.ErpClient
+import br.com.zup.chaves.ChavePix
+import br.com.zup.chaves.ChavePixRepository
+import br.com.zup.clients.BacenClient
+import br.com.zup.clients.ErpClient
+import br.com.zup.contas.Conta
 import br.com.zup.contas.ContaRepository
 import br.com.zup.exceptions.ErrorHandler
 import io.grpc.Status
@@ -37,6 +40,7 @@ class CadastraPixEndpoint(
                 if (it == null) {
                     throw IllegalStateException("Conta não encontrada!")
                 }
+                logger.info("Salvando conta no banco de dados")
                 contaRepository.save(it.toModel())
             }
 
@@ -46,14 +50,15 @@ class CadastraPixEndpoint(
                 throw IllegalStateException("Chave já cadastrada!")
             }
 
-            // TODO: 08/04/2021 Descobrir como chamar a conta, instituicao e titular
-            val novaChave = request.paraChave()
+            logger.info("Chave não encontrada, cadastrando chave")
+
+            val novaChave = toModel(request,conta)
 
             logger.info("Salvando chave no banco de dados")
-//            chavePixRepository.save(novaChave)
+            chavePixRepository.save(novaChave)
 
             logger.info("Cadastrando chave no Bacen")
-//            bacenClient.cadastra(novaChave.paraPixRequest())
+            bacenClient.cadastra(novaChave.paraPixRequest(conta))
         } catch (e: ConstraintViolationException) {
             responseObserver.onError(
                 Status.INVALID_ARGUMENT
@@ -73,4 +78,13 @@ class CadastraPixEndpoint(
 
     }
 
+}
+
+private fun toModel(request: CadastraPixRequest, conta: Conta) : ChavePix {
+    return ChavePix(
+        chave = request.chave,
+        tipoDaChave = request.tipoDaChave,
+        tipoDaConta = request.tipoDaConta,
+        conta = conta
+    )
 }

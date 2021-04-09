@@ -1,38 +1,16 @@
-package br.com.zup.chaves.clients
+package br.com.zup.clients.requests
 
 import br.com.zup.TipoDaChave
 import br.com.zup.TipoDaConta
 import io.grpc.Status
-import io.micronaut.http.MediaType
-import io.micronaut.http.annotation.Body
-import io.micronaut.http.annotation.Post
-import io.micronaut.http.client.annotation.Client
 import java.time.LocalDateTime
 import java.util.regex.Pattern
-
-@Client(value = "\${bcb.pix.url}")
-interface BacenClient {
-
-    @Post("/api/v1/pix/keys",
-        consumes = [MediaType.APPLICATION_XML], produces = [MediaType.APPLICATION_XML])
-    fun cadastra(@Body createPixKeyRequest: CreatePixKeyRequest): CreatePixKeyResponse
-
-}
-
-data class CreatePixKeyResponse(
-    val keyType: KeyType,
-    val key: String,
-    val bankAccount: BankAccount,
-    val owner: Owner,
-    val createdAt: LocalDateTime
-)
 
 data class CreatePixKeyRequest(
     val keyType: KeyType,
     val key: String,
     val bankAccount: BankAccount,
     val owner: Owner,
-    val createdAt: LocalDateTime
 )
 
 data class Owner(
@@ -116,5 +94,15 @@ enum class KeyType(val status: Status, val mensagem: String) {
     }
 
     abstract fun isValid(chave: String): Boolean;
-
 }
+
+data class DeletePixKeyRequest(
+    val key: String,
+    val participant: String
+)
+
+data class DeletePixKeyResponse(
+    val key: String,
+    val participant: String,
+    val deletedAt: String
+)

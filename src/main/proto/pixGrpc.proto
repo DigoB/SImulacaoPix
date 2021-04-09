@@ -35,3 +35,16 @@ message CadastraPixResponse {
   string clienteId = 1;
   string pixId     = 2;
 }
+
+service DeletaPixService{
+  rpc deleta(DeletaPixRequest) returns (DeletaPixResponse);
+}
+
+message DeletaPixRequest {
+  int64 pixId     = 1;
+}
+
+message DeletaPixResponse {
+  string pixId     = 1;
+  string clienteId = 2;
+}
